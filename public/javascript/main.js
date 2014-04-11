@@ -13,7 +13,7 @@
 
   function connect_to_chat_firebase(){
     /* Include your Firebase link here!*/
-    fb_instance = new Firebase("https://gsroth-p3-v1.firebaseio.com");
+    fb_instance = new Firebase("https://shining-fire-6358.firebaseio.com/");
 
     // generate new chatroom id or use existing id
     var url_segments = document.location.href.split("/#");
@@ -49,12 +49,46 @@
     // bind submission box
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
-        if(has_emotions($(this).val())){
-          fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color});
+        var msg = $(this).val();
+        if(has_emotions(msg)){
+
+          var edit_menu = document.getElementById("edit_menu");
+          $(edit_menu).show();
+          var edit_vid = document.getElementById("edit_vid");
+          edit_vid.height = "200";
+          edit_vid.width = "200";
+          edit_vid.type="video/webm"
+         // var edit_source = document.createElement("source");
+          edit_vid.src = URL.createObjectURL(base64_to_blob(cur_video_blob));
+          //edit_source.type = "video/webm";
+          //edit_vid.appendChild(edit_source);
+          //edit_vid.pause();
+
+
+          //http://odetocode.com/blogs/scott/archive/2013/01/04/capturing-html-5-video-to-an-image.aspx
+          // var captureImage = function() {
+          //   var canvas = document.createElement("canvas");
+          //   canvas.width = video.videoWidth * scale;
+          //   canvas.height = video.videoHeight * scale;
+          //   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          //   var img = document.getElementById("edit_vid");
+          //   img.src = canvas.toDataURL();
+          // };
+
+          //var img = captureImage()
+
+          var obj = this;
+
+          $("#edit_menu").click(function( event ) {
+            fb_instance_stream.push({m:username+": " + msg, v:cur_video_blob, c: my_color});
+            $(obj).val("");
+                    scroll_to_bottom(0);
+                    $(edit_menu).hide();
+          });
         }else{
-          fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
+          fb_instance_stream.push({m:username+": " + msg, c: my_color});
+          $(this).val("");
         }
-        $(this).val("");
         scroll_to_bottom(0);
       }
     });
@@ -67,7 +101,7 @@
   function display_msg(data){
     $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
-      // for video element
+      //for video element
       var video = document.createElement("video");
       video.autoplay = true;
       video.controls = false; // optional
@@ -81,8 +115,8 @@
       video.appendChild(source);
 
       // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
-      // var video = document.createElement("img");
-      // video.src = URL.createObjectURL(base64_to_blob(data.v));
+      //var video = document.createElement("img");
+      //video.src = URL.createObjectURL(base64_to_blob(data.v));
 
       document.getElementById("conversation").appendChild(video);
     }
@@ -133,7 +167,7 @@
       var index = 1;
 
       mediaRecorder.mimeType = 'video/webm';
-      // mediaRecorder.mimeType = 'image/gif';
+      //mediaRecorder.mimeType = 'image/gif';
       // make recorded media smaller to save some traffic (80 * 60 pixels, 3*24 frames)
       mediaRecorder.video_width = video_width/2;
       mediaRecorder.video_height = video_height/2;

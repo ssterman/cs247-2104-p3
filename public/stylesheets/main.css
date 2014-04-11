@@ -53,3 +53,13 @@ a {
   text-align: center;
   padding: 50px 0;
 }
+#edit_menu {
+  border-style: solid;
+  border-width: 3px;
+  border-color: black;
+  background-color: white;
+  position: fixed;
+  bottom: 30px;
+  right: 10px;
+  display: none;
+}
