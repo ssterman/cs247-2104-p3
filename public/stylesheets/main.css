@@ -1,5 +1,9 @@
+html {
+  height: 100%;
+}
 body {
-  margin: 10px;
+  height: 100%;
+  background: #ccc;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
@@ -22,9 +26,11 @@ a {
   z-index: 999;
 }
 #conversation {
-  padding: 10px 10px 80px;
-  overflow-y: scroll;
+  margin-left: -5px;
+  margin-top: -5px;
   height: 100%;
+  width: 75%;
+  background-color: #e1e1e1;
 }
 #submission {
   position: fixed;
@@ -68,11 +74,17 @@ a {
   width: 200px;
 }
 #top_hider {
-  top: 30px;
+  top: 25px;
 }
 #bottom_hider {
-  top: 120px;
+  bottom: -180px;
 }
 #edit_vid {
   position: absolute;
+}
+.msg_hider {
+  position: absolute;
+  background-color: white;
+  opacity: .9;
+  width: 160px;
 }

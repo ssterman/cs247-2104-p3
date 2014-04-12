@@ -54,31 +54,49 @@
 
           var vid_height = 200;
           var vid_width = 200;
+          var stripe_height = vid_height/3;
 
           var edit_menu = document.getElementById("edit_menu");
           $(edit_menu).show();
-          
+
           var edit_vid = document.getElementById("edit_vid");
           edit_vid.style.height = vid_height + "px";
           edit_vid.style.width = vid_width + "px";
           edit_vid.type="video/webm"
           edit_vid.src = URL.createObjectURL(base64_to_blob(cur_video_blob));
 
+          var center_y;
+          //var center_y;
 
-   
-          var obj = this;
-          $("#edit_vid").click(function( event ) {
+          var top_hider = document.getElementById("top_hider");
+          var bottom_hider = document.getElementById("bottom_hider");
+
+          $(edit_menu).mousemove(function( event ) {
             var mouse_x = event.pageX;
             var mouse_y = event.pageY;
             var vid_x = $('#edit_vid').offset().left;
             var vid_y = $('#edit_vid').offset().top;
-            var center_x = mouse_x - vid_x;
-            var center_y = mouse_y - vid_y;
-            //console.log("Mouse: ", center_x, center_y);
-            var proportion_x = center_x / $('#edit_vid').width();
-            var proportion_y = center_y / $('#edit_vid').height();
-            console.log("Proportion: ", proportion_x, proportion_y);
-            fb_instance_stream.push({m:username+": " + msg, v:cur_video_blob, c: my_color, x: proportion_x, y: proportion_y});
+            //center_x = mouse_x - vid_x;
+            center_y = mouse_y - vid_y;
+            // console.log("Mouse: ", center_x, center_y);
+
+            var top_height = center_y - stripe_height/2;
+            $(top_hider).height(top_height); 
+
+            var bottom_height = vid_height - top_height - stripe_height;
+            $(bottom_hider).height(bottom_height); 
+          });
+
+   
+          var obj = this;
+          $(edit_menu).click(function( event ) {
+            
+            var top_height_proportion = $('#top_hider').height() / $('#edit_vid').height();
+            var bottom_height_proportion = $('#bottom_hider').height() / $('#edit_vid').height();
+
+            //var proportion_y = center_y / $('#edit_vid').height();
+            //console.log("Proportion: ", top_height_proportion);
+            fb_instance_stream.push({m:username+": " + msg, v:cur_video_blob, c: my_color, t: top_height_proportion, b: bottom_height_proportion});
             $(obj).val("");
             scroll_to_bottom(0);
             $(edit_menu).hide();
@@ -99,13 +117,13 @@
   function display_msg(data){
     $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
-      console.log("response: ", data.x, data.y);
       //for video element
       var video = document.createElement("video");
       video.autoplay = true;
-      video.controls = false; // optional
+      video.controls = false; 
       video.loop = true;
-      video.width = 120;
+      video.height = 120;
+
 
       var source = document.createElement("source");
       source.src =  URL.createObjectURL(base64_to_blob(data.v));
@@ -113,11 +131,18 @@
 
       video.appendChild(source);
 
-      // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
-      //var video = document.createElement("img");
-      //video.src = URL.createObjectURL(base64_to_blob(data.v));
+      //this container crops the view of the video
+      var container = document.createElement("div");
+      container.style.position = "relative";
+      container.style.overflow = "hidden";
+      container.style.display = "block";
+      container.height = video.height;
 
-      document.getElementById("conversation").appendChild(video);
+      video.style.marginTop =  "-" +  (data.t*video.height).toString() + "px"; 
+      video.style.marginBottom = "-" + (data.b*video.height).toString() + "px";
+
+      document.getElementById("conversation").appendChild(container);
+      container.appendChild(video);
     }
   }
 
