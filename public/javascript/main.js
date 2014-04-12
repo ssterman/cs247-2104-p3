@@ -52,38 +52,36 @@
         var msg = $(this).val();
         if(has_emotions(msg)){
 
+          var vid_height = 200;
+          var vid_width = 200;
+
           var edit_menu = document.getElementById("edit_menu");
           $(edit_menu).show();
+          
           var edit_vid = document.getElementById("edit_vid");
-          edit_vid.height = "200";
-          edit_vid.width = "200";
+          edit_vid.style.height = vid_height + "px";
+          edit_vid.style.width = vid_width + "px";
           edit_vid.type="video/webm"
-         // var edit_source = document.createElement("source");
           edit_vid.src = URL.createObjectURL(base64_to_blob(cur_video_blob));
-          //edit_source.type = "video/webm";
-          //edit_vid.appendChild(edit_source);
-          //edit_vid.pause();
 
 
-          //http://odetocode.com/blogs/scott/archive/2013/01/04/capturing-html-5-video-to-an-image.aspx
-          // var captureImage = function() {
-          //   var canvas = document.createElement("canvas");
-          //   canvas.width = video.videoWidth * scale;
-          //   canvas.height = video.videoHeight * scale;
-          //   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-          //   var img = document.getElementById("edit_vid");
-          //   img.src = canvas.toDataURL();
-          // };
-
-          //var img = captureImage()
-
+   
           var obj = this;
-
-          $("#edit_menu").click(function( event ) {
-            fb_instance_stream.push({m:username+": " + msg, v:cur_video_blob, c: my_color});
+          $("#edit_vid").click(function( event ) {
+            var mouse_x = event.pageX;
+            var mouse_y = event.pageY;
+            var vid_x = $('#edit_vid').offset().left;
+            var vid_y = $('#edit_vid').offset().top;
+            var center_x = mouse_x - vid_x;
+            var center_y = mouse_y - vid_y;
+            //console.log("Mouse: ", center_x, center_y);
+            var proportion_x = center_x / $('#edit_vid').width();
+            var proportion_y = center_y / $('#edit_vid').height();
+            console.log("Proportion: ", proportion_x, proportion_y);
+            fb_instance_stream.push({m:username+": " + msg, v:cur_video_blob, c: my_color, x: proportion_x, y: proportion_y});
             $(obj).val("");
-                    scroll_to_bottom(0);
-                    $(edit_menu).hide();
+            scroll_to_bottom(0);
+            $(edit_menu).hide();
           });
         }else{
           fb_instance_stream.push({m:username+": " + msg, c: my_color});
@@ -101,6 +99,7 @@
   function display_msg(data){
     $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
+      console.log("response: ", data.x, data.y);
       //for video element
       var video = document.createElement("video");
       video.autoplay = true;
