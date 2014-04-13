@@ -1,11 +1,19 @@
+
+@main_background: #F8E0D9;
+@convo_background: #E0EBFF;
+@border_color: #dcc;
+
 html {
     height: 100%;
-
+    margin: 0px;
+    padding: 0px;
 }
 
 body {
+  margin: 0px;
+  padding: 0px;
   height: 100%;
-  background: #ccc;
+  background: @main_background;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -13,9 +21,22 @@ a {
   color: #00B7FF;
 }
 
+#info {
+  position: fixed;
+  background: white;
+  padding: 10px;
+  width: 100%;
+  border-bottom-style: solid;
+  border-color: @border_color;
+}
+
+#under_info {
+  height: 50px;  
+}
+
 #webcam_stream{
-  position: absolute;
-  top: 10px;
+  position: fixed;
+  top: 20px;
   right: 10px;
   padding: 0;
   video{
@@ -32,11 +53,17 @@ a {
 }
 
 #conversation{
-  margin-left: -5px;
-  margin-top: -5px;
-  height: 100%;
+  position: fixed;
+  margin-left: 5px;
+  margin-top: 5px;
+
+  height: 70%;
   width: 75%;
-  background-color: #e1e1e1;
+  background-color: @convo_background;
+  overflow:auto;
+
+  border-style: solid;
+  border-color: @border_color;
 }
 
 #submission{
@@ -44,7 +71,7 @@ a {
   bottom: 0;
   width: 100%;
   right: 0;
-  border-top: 2px solid #dcc;
+  border-top: 2px solid @border_color;
   background: #fff;
 
   input{
@@ -70,31 +97,60 @@ a {
 }
 
 #edit_menu {
-  background-color: white;
+  background-color: @main_background;
   position: fixed;
   bottom: 230px;
-  right: 210px;
+  right: 70px;
   display: none;
 }
 
 .hider {
   position: absolute;
-  background-color: white;
-  opacity: .5;
+  background-color: @main_background;
+  opacity: .6;
   height: 60px;
   width: 200px;
 }
 
 #top_hider {
-  top: 25px;
 }
 
 #bottom_hider {
-  bottom: -180px;
+  bottom: -150px;
 }
 
 #edit_vid {
   position: absolute;
+}
+
+#instructions {
+  color: red;
+  padding: 5px;
+}
+
+#faq {
+  background: white;
+  cursor: pointer;
+  position: fixed;
+  right: 10px;
+  top: 50px;
+  padding: 5px;
+  border-style: solid;
+  border-color: @border_color;
+}
+
+#more_faq {
+  background: white;
+  position: fixed;
+  right: 10px;
+  top: 80px;
+  padding: 5px;
+  display: none;
+  width: 200px;
+  border-style: solid;
+  border-color: @border_color;
+
+
 }
 
 

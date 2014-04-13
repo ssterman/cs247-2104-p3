@@ -1,6 +1,20 @@
 // Initial code by Borui Wang, updated by Graham Roth
 // For CS247, Spring 2014
 
+
+//bugs: scroll not working in long convos
+//colors are illegible
+//vid not picking up sometimes
+
+// media error 
+// NavigatorUserMediaError
+// constraintName: ""
+// message: ""
+// name: "PermissionDeniedError"
+// __proto__: NavigatorUserMediaError
+ 
+
+
 (function() {
 
   var cur_video_blob = null;
@@ -9,6 +23,15 @@
   $(document).ready(function(){
     connect_to_chat_firebase();
     connect_webcam();
+
+      var faq = document.getElementById("faq");
+      $(faq).hover(function() {
+          var more_faq = document.getElementById("more_faq");
+          $(more_faq).show();
+        }, function() {
+          $(more_faq).hide();
+        }
+       );
   });
 
   function connect_to_chat_firebase(){
@@ -22,7 +45,9 @@
     }else{
       fb_chat_room_id = Math.random().toString(36).substring(7);
     }
-    display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
+    
+    var info = document.getElementById("info");
+    info.innerHTML = "Share this url with your friend to join this chat: "+ "<b>" + document.location.origin+"/#"+fb_chat_room_id +"</b>";
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -39,11 +64,11 @@
     });
 
     // block until username is answered
-    var username = window.prompt("Welcome, warrior! please declare your name?");
-    if(!username){
-      username = "anonymous"+Math.floor(Math.random()*1111);
-    }
-    fb_instance_users.push({ name: username,c: my_color});
+    // var username = window.prompt("Welcome, warrior! please declare your name?");
+    // if(!username){
+       var username = "anonymous"+Math.floor(Math.random()*1111);
+    // }
+     fb_instance_users.push({ name: username,c: my_color});
     $("#waiting").remove();
 
     // bind submission box
@@ -51,19 +76,23 @@
       if (event.which == 13) {
         var msg = $(this).val();
         if(has_emotions(msg)){
+          $(this).val("");
+          console.log("has emotions");
 
-          var vid_height = 200;
-          var vid_width = 200;
-          var stripe_height = vid_height/3;
+          var msg_blob = cur_video_blob;
+
+          var vid_height = 150;
+          //var vid_width = 200;
+          var stripe_height = vid_height/4;
 
           var edit_menu = document.getElementById("edit_menu");
           $(edit_menu).show();
 
           var edit_vid = document.getElementById("edit_vid");
           edit_vid.style.height = vid_height + "px";
-          edit_vid.style.width = vid_width + "px";
+          //edit_vid.style.width = vid_width + "px";
           edit_vid.type="video/webm"
-          edit_vid.src = URL.createObjectURL(base64_to_blob(cur_video_blob));
+          edit_vid.src = URL.createObjectURL(base64_to_blob(msg_blob));
 
           var center_y;
           //var center_y;
@@ -86,36 +115,35 @@
             var bottom_height = vid_height - top_height - stripe_height;
             $(bottom_hider).height(bottom_height); 
           });
-
    
           var obj = this;
           $(edit_menu).click(function( event ) {
-            
+            console.log("click");
             var top_height_proportion = $('#top_hider').height() / $('#edit_vid').height();
             var bottom_height_proportion = $('#bottom_hider').height() / $('#edit_vid').height();
 
-            //var proportion_y = center_y / $('#edit_vid').height();
-            //console.log("Proportion: ", top_height_proportion);
-            fb_instance_stream.push({m:username+": " + msg, v:cur_video_blob, c: my_color, t: top_height_proportion, b: bottom_height_proportion});
+            console.log(top_height_proportion, bottom_height_proportion, top_height_proportion+bottom_height_proportion+1/4);
+            fb_instance_stream.push({m:username+": " + msg, v:msg_blob, c: my_color, t: top_height_proportion, b: bottom_height_proportion});
             $(obj).val("");
-            scroll_to_bottom(0);
+            // scroll_to_bottom(0);
             $(edit_menu).hide();
+            $(edit_menu).unbind("click");
           });
         }else{
           fb_instance_stream.push({m:username+": " + msg, c: my_color});
           $(this).val("");
         }
-        scroll_to_bottom(0);
+        // scroll_to_bottom(0);
       }
     });
 
     // scroll to bottom in case there is already content
-    scroll_to_bottom(1300);
+    // scroll_to_bottom(1300);
   }
 
   // creates a message node and appends it to the conversation
   function display_msg(data){
-    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
+    console.log("display");
     if(data.v){
       //for video element
       var video = document.createElement("video");
@@ -123,7 +151,6 @@
       video.controls = false; 
       video.loop = true;
       video.height = 120;
-
 
       var source = document.createElement("source");
       source.src =  URL.createObjectURL(base64_to_blob(data.v));
@@ -139,17 +166,22 @@
       container.height = video.height;
 
       video.style.marginTop =  "-" +  (data.t*video.height).toString() + "px"; 
-      video.style.marginBottom = "-" + (data.b*video.height).toString() + "px";
+      video.style.marginBottom = "-" + ((1-(data.t+1/4))*video.height).toString() + "px";
 
       document.getElementById("conversation").appendChild(container);
       container.appendChild(video);
+      console.log("append");
+      data.m = "";
     }
+    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
+    scroll_to_bottom("conversation", 0);
   }
 
-  function scroll_to_bottom(wait_time){
+  function scroll_to_bottom(div1, wait_time){
     // scroll to bottom of div
+    var div = document.getElementById(div1);
     setTimeout(function(){
-      $("html, body").animate({ scrollTop: $(document).height() }, 200);
+      $(div).animate({ scrollTop: $(document).height() }, 200);
     },wait_time);
   }
 
@@ -177,6 +209,7 @@
       });
       video.play();
       webcam_stream.appendChild(video);
+      $(webcam_stream).hide();
 
       // counter
       var time = 0;
@@ -185,7 +218,7 @@
         second_counter.innerHTML = time++;
       },1000);
 
-      // now record stream in 5 seconds interval
+      // now record stream in 2 seconds interval
       var video_container = document.getElementById('video_container');
       var mediaRecorder = new MediaStreamRecorder(stream);
       var index = 1;
@@ -198,6 +231,8 @@
 
       mediaRecorder.ondataavailable = function (blob) {
           //console.log("new data available!");
+          var instructions = document.getElementById("instructions");
+          $(instructions).hide();
           video_container.innerHTML = "";
 
           // convert data into base 64 blocks
@@ -207,8 +242,8 @@
       };
       setInterval( function() {
         mediaRecorder.stop();
-        mediaRecorder.start(3000);
-      }, 3000 );
+        mediaRecorder.start(2000);
+      }, 2000 );
       console.log("connect to media stream!");
     }
 
@@ -223,7 +258,7 @@
 
   // check to see if a message qualifies to be replaced with video.
   var has_emotions = function(msg){
-    var options = ["lol",":)",":("];
+    var options = ["lol",":)",":(", ";)", ":P", ":p", "-_-", ">_<", "O_O"];
     for(var i=0;i<options.length;i++){
       if(msg.indexOf(options[i])!= -1){
         return true;
