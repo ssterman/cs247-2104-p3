@@ -76,7 +76,7 @@
       if (event.which == 13) {
         var msg = $(this).val();
         if(has_emotions(msg)){
-          $(this).val("");
+          //$(this).val("");
           console.log("has emotions");
 
           var msg_blob = cur_video_blob;
@@ -99,6 +99,19 @@
 
           var top_hider = document.getElementById("top_hider");
           var bottom_hider = document.getElementById("bottom_hider");
+
+          // var submit_msg = username+": " + msg;
+          // submit_msg = removeEmoticons(submit_msg);
+          // if (emptyMessage(msg)) {
+          //   submit_msg = "";
+          //   //$(this).val("");
+          // }
+
+          msg = removeEmoticons(msg);
+          var submit_msg = username+": " + msg;
+          if (msg.length == 0) {
+            submit_msg = "";
+          }
 
           $(edit_menu).mousemove(function( event ) {
             var mouse_x = event.pageX;
@@ -123,7 +136,7 @@
             var bottom_height_proportion = $('#bottom_hider').height() / $('#edit_vid').height();
 
             console.log(top_height_proportion, bottom_height_proportion, top_height_proportion+bottom_height_proportion+1/4);
-            fb_instance_stream.push({m:username+": " + msg, v:msg_blob, c: my_color, t: top_height_proportion, b: bottom_height_proportion});
+            fb_instance_stream.push({m:submit_msg, v:msg_blob, c: my_color, t: top_height_proportion, b: bottom_height_proportion});
             $(obj).val("");
             // scroll_to_bottom(0);
             $(edit_menu).hide();
@@ -144,6 +157,7 @@
   // creates a message node and appends it to the conversation
   function display_msg(data){
     console.log("display");
+    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
       //for video element
       var video = document.createElement("video");
@@ -171,9 +185,8 @@
       document.getElementById("conversation").appendChild(container);
       container.appendChild(video);
       console.log("append");
-      data.m = "";
+      //data.m = "";
     }
-    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     scroll_to_bottom("conversation", 0);
   }
 
@@ -266,6 +279,26 @@
     }
     return false;
   }
+
+  var removeEmoticons = function(msg) {
+    var options = ["lol",":)",":(", ";)", ":P", ":p", "-_-", ">_<", "O_O", ":D"];
+    options.forEach(function (elem) {
+      msg = msg.replace(elem, "");
+      console.log(msg);
+      console.log(elem);
+    });
+    console.log("msg: ", msg);
+    return msg;
+  }
+
+  // var emptyMessage = function(msg) {
+  //   var re = /anonymous\d*:\s*/;
+  //   if (msg.match(re)) {
+  //     console.log("MATCH");
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
 
   // some handy methods for converting blob to base 64 and vice versa
