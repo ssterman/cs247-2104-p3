@@ -12,7 +12,7 @@
 // message: ""
 // name: "PermissionDeniedError"
 // __proto__: NavigatorUserMediaError
- 
+
 
 
 (function() {
@@ -47,7 +47,7 @@
     }
     
     var info = document.getElementById("info");
-    info.innerHTML = "Share this url with your friend to join this chat: "+ "<b>" + document.location.origin+"/#"+fb_chat_room_id +"</b>";
+    info.innerHTML = "Welcom to Vemoji. To join this chat, share this URL: "+ "<b>" + document.location.origin+"/#"+fb_chat_room_id +"</b>";
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -212,11 +212,11 @@
       $(webcam_stream).hide();
 
       // counter
-      var time = 0;
-      var second_counter = document.getElementById('second_counter');
-      var second_counter_update = setInterval(function(){
-        second_counter.innerHTML = time++;
-      },1000);
+      // var time = 0;
+      // var second_counter = document.getElementById('second_counter');
+      // var second_counter_update = setInterval(function(){
+      //   second_counter.innerHTML = time++;
+      // },1000);
 
       // now record stream in 2 seconds interval
       var video_container = document.getElementById('video_container');
@@ -258,7 +258,7 @@
 
   // check to see if a message qualifies to be replaced with video.
   var has_emotions = function(msg){
-    var options = ["lol",":)",":(", ";)", ":P", ":p", "-_-", ">_<", "O_O"];
+    var options = ["lol",":)",":(", ";)", ":P", ":p", "-_-", ">_<", "O_O", ":D"];
     for(var i=0;i<options.length;i++){
       if(msg.indexOf(options[i])!= -1){
         return true;
