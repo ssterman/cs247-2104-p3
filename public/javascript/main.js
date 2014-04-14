@@ -71,11 +71,12 @@
 
     // bind submission box
     $("#submission input").keydown(function( event ) {
+      //console.log("keydown");
       if (event.which == 13) {
         var msg = $(this).val();
         if(has_emotions(msg)){
           //$(this).val("");
-          console.log("has emotions");
+          //console.log("has emotions");
 
           var msg_blob = cur_video_blob;
 
@@ -120,7 +121,7 @@
             var vid_y = $('#edit_vid').offset().top;
             //center_x = mouse_x - vid_x;
             center_y = mouse_y - vid_y;
-            // console.log("Mouse: ", center_x, center_y);
+            // //console.log("Mouse: ", center_x, center_y);
 
             var top_height = center_y - stripe_height/2;
             $(top_hider).height(top_height); 
@@ -130,17 +131,30 @@
           });
    
           var obj = this;
-          $(document.getElementById("cancel")).click(function (event){
-            console.log("cancel");
+
+          var cancel = document.getElementById("cancel");
+          $(cancel).click(function (event){
+            //console.log("cancel");
             msg_blob = null;
             submit_msg = username+": " + orig_msg;
+            $(cancel).unbind("click");
           });
+          // var redo = document.getElementById("redo");
+          // $(redo).click(function (event) {
+          //   //console.log("redo");
+          //   msg_blob = null;
+          //   submit_msg = "";
+          //   $(redo).unbind("click");
+          //   $("#submission input").trigger(jQuery.Event('keydown', {which: 13}));
+          //   //console.log("end redo");
+          // });
+
           $(edit_menu).click(function( event ) {
-            console.log("click");
+            //console.log("click");
             var top_height_proportion = $('#top_hider').height() / $('#edit_vid').height();
             var bottom_height_proportion = $('#bottom_hider').height() / $('#edit_vid').height();
 
-            console.log(top_height_proportion, bottom_height_proportion, top_height_proportion+bottom_height_proportion+1/4);
+            //console.log(top_height_proportion, bottom_height_proportion, top_height_proportion+bottom_height_proportion+1/4);
             fb_instance_stream.push({m:submit_msg, v:msg_blob, c: my_color, t: top_height_proportion, b: bottom_height_proportion});
             $(obj).val("");
             // scroll_to_bottom(0);
@@ -161,7 +175,7 @@
 
   // creates a message node and appends it to the conversation
   function display_msg(data){
-    console.log("display");
+    //console.log("display");
     $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
       //for video element
@@ -189,7 +203,7 @@
 
       document.getElementById("conversation").appendChild(container);
       container.appendChild(video);
-      console.log("append");
+      //console.log("append");
       //data.m = "";
     }
     var convdiv = document.getElementById("conversation");
@@ -201,7 +215,7 @@
     //var div = document.getElementById(div1);
     setTimeout(function(){
       $(div).animate({ scrollTop: height}, 200);
-      console.log("scrolling, height: ", height);
+      //console.log("scrolling, height: ", height);
     },wait_time);
   }
 
@@ -250,7 +264,7 @@
       mediaRecorder.video_height = video_height/2;
 
       mediaRecorder.ondataavailable = function (blob) {
-          //console.log("new data available!");
+          ////console.log("new data available!");
           var instructions = document.getElementById("instructions");
           $(instructions).hide();
           video_container.innerHTML = "";
@@ -264,7 +278,7 @@
         mediaRecorder.stop();
         mediaRecorder.start(2000);
       }, 2000 );
-      console.log("connect to media stream!");
+      //console.log("connect to media stream!");
     }
 
     // callback if there is an error when we try and get the video stream
@@ -291,10 +305,10 @@
     var options = ["lol",":)",":(", ";)", ":P", ":p", "-_-", ">_<", "O_O", ":D"];
     options.forEach(function (elem) {
       msg = msg.replace(elem, "");
-      console.log(msg);
-      console.log(elem);
+      //console.log(msg);
+      //console.log(elem);
     });
-    console.log("msg: ", msg);
+    //console.log("msg: ", msg);
     return msg;
   }
 

@@ -7,7 +7,7 @@ body {
   margin: 0px;
   padding: 0px;
   height: 100%;
-  background: #f8e0d9;
+  background: #d9ffda;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
@@ -45,8 +45,8 @@ a {
   margin-left: 5px;
   margin-top: 5px;
   height: 70%;
-  width: 75%;
-  background-color: #e0ebff;
+  width: 50%;
+  background-color: #ffffff;
   overflow: auto;
   border-style: solid;
   border-color: #ddcccc;
@@ -79,7 +79,7 @@ a {
   padding: 50px 0;
 }
 #edit_menu {
-  background-color: #f8e0d9;
+  background-color: #d9ffda;
   position: fixed;
   bottom: 230px;
   right: 70px;
@@ -87,7 +87,7 @@ a {
 }
 .hider {
   position: absolute;
-  background-color: #f8e0d9;
+  background-color: #d9ffda;
   opacity: .6;
   height: 60px;
   width: 200px;
@@ -129,7 +129,17 @@ a {
   background: red;
   position: absolute;
   right: -65px;
-  top: 20px;
+  top: 18px;
+  text-align: center;
+  cursor: pointer;
+}
+#redo {
+  height: 20px;
+  width: 20px;
+  background: blue;
+  position: absolute;
+  right: 113px;
+  top: 18px;
   text-align: center;
   cursor: pointer;
 }
