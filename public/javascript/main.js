@@ -2,7 +2,6 @@
 // For CS247, Spring 2014
 
 
-//bugs: scroll not working in long convos
 //colors are illegible
 //vid not picking up sometimes
 
@@ -12,7 +11,6 @@
 // message: ""
 // name: "PermissionDeniedError"
 // __proto__: NavigatorUserMediaError
-
 
 
 (function() {
@@ -47,7 +45,7 @@
     }
     
     var info = document.getElementById("info");
-    info.innerHTML = "Welcom to Vemoji. To join this chat, share this URL: "+ "<b>" + document.location.origin+"/#"+fb_chat_room_id +"</b>";
+    info.innerHTML = "Welcome to Vemoji. To join this chat, share this URL: "+ "<b>" + document.location.origin+"/#"+fb_chat_room_id +"</b>";
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -64,10 +62,10 @@
     });
 
     // block until username is answered
-    // var username = window.prompt("Welcome, warrior! please declare your name?");
-    // if(!username){
+    var username = window.prompt("Welcome, to Vemoji! Vemoji is a chatting application that lets you send video emoji.  Chat like normal, but when you submit an emoticon, you'll have the chance to choose a part of your face to send instead. Smile, or quirk your eyebrows, stick out your tongue or roll your eyes. Alternate with your friend, and make composite faces! Ready to chat? Choose a username!");
+    if(!username){
        var username = "anonymous"+Math.floor(Math.random()*1111);
-    // }
+    }
      fb_instance_users.push({ name: username,c: my_color});
     $("#waiting").remove();
 
@@ -93,7 +91,8 @@
           //edit_vid.style.width = vid_width + "px";
           edit_vid.type="video/webm"
           edit_vid.src = URL.createObjectURL(base64_to_blob(msg_blob));
-
+          edit_vid.loop = true;
+          edit_vid.autoplay = true;
           var center_y;
           //var center_y;
 
@@ -107,6 +106,7 @@
           //   //$(this).val("");
           // }
 
+          orig_msg = msg;
           msg = removeEmoticons(msg);
           var submit_msg = username+": " + msg;
           if (msg.length == 0) {
@@ -130,6 +130,11 @@
           });
    
           var obj = this;
+          $(document.getElementById("cancel")).click(function (event){
+            console.log("cancel");
+            msg_blob = null;
+            submit_msg = username+": " + orig_msg;
+          });
           $(edit_menu).click(function( event ) {
             console.log("click");
             var top_height_proportion = $('#top_hider').height() / $('#edit_vid').height();
@@ -187,14 +192,16 @@
       console.log("append");
       //data.m = "";
     }
-    scroll_to_bottom("conversation", 0);
+    var convdiv = document.getElementById("conversation");
+    scroll_to_bottom(convdiv, 0, convdiv.scrollHeight);
   }
 
-  function scroll_to_bottom(div1, wait_time){
+  function scroll_to_bottom(div, wait_time, height){
     // scroll to bottom of div
-    var div = document.getElementById(div1);
+    //var div = document.getElementById(div1);
     setTimeout(function(){
-      $(div).animate({ scrollTop: $(document).height() }, 200);
+      $(div).animate({ scrollTop: height}, 200);
+      console.log("scrolling, height: ", height);
     },wait_time);
   }
 
@@ -290,15 +297,6 @@
     console.log("msg: ", msg);
     return msg;
   }
-
-  // var emptyMessage = function(msg) {
-  //   var re = /anonymous\d*:\s*/;
-  //   if (msg.match(re)) {
-  //     console.log("MATCH");
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
 
   // some handy methods for converting blob to base 64 and vice versa
