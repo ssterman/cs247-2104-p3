@@ -1,7 +1,8 @@
 
-@main_background: #D9FFDA;
+@main_background: #efffff;
 @convo_background: white;
 @border_color: #dcc;
+@border_width: 1px;
 
 html {
     height: 100%;
@@ -14,7 +15,7 @@ body {
   padding: 0px;
   height: 100%;
   background: @main_background;
-  font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Tahoma", Geneva, sans-serif;
 }
 
 a {
@@ -26,8 +27,10 @@ a {
   background: #eee;
   padding: 10px;
   width: 100%;
+
   border-bottom-style: solid;
   border-color: @border_color;
+  border-width: @border_width;
 }
 
 #under_info {
@@ -57,6 +60,8 @@ a {
   margin-left: 5px;
   margin-top: 5px;
 
+  padding: 11px;
+
   height: 70%;
   width: 75%;
   background-color: @convo_background;
@@ -64,6 +69,7 @@ a {
 
   border-style: solid;
   border-color: @border_color;
+  border-width: @border_width;
 }
 
 #submission{
@@ -73,6 +79,7 @@ a {
   right: 0;
   border-top: 2px solid @border_color;
   background: #fff;
+  border-width: @border_width;
 
   input{
     border: none;
@@ -137,6 +144,8 @@ a {
   padding: 5px;
   border-style: solid;
   border-color: @border_color;
+    border-width: @border_width;
+
 }
 
 #more_faq {
@@ -149,6 +158,8 @@ a {
   width: 200px;
   border-style: solid;
   border-color: @border_color;
+    border-width: @border_width;
+
 }
 
 #cancel {

@@ -1,18 +1,6 @@
 // Initial code by Borui Wang, updated by Graham Roth
 // For CS247, Spring 2014
 
-
-//colors are illegible
-//vid not picking up sometimes
-
-// media error 
-// NavigatorUserMediaError
-// constraintName: ""
-// message: ""
-// name: "PermissionDeniedError"
-// __proto__: NavigatorUserMediaError
-
-
 (function() {
 
   var cur_video_blob = null;
@@ -45,7 +33,7 @@
     }
     
     var info = document.getElementById("info");
-    info.innerHTML = "Welcome to Vemoji. To join this chat, share this URL: "+ "<b>" + document.location.origin+"/#"+fb_chat_room_id +"</b>";
+    info.innerHTML = "Welcome to Vemoji. To join the chat, share this URL: "+ "<b>" + document.location.origin+"/#"+fb_chat_room_id +"</b>";
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -62,7 +50,7 @@
     });
 
     // block until username is answered
-    var username = window.prompt("Welcome, to Vemoji! Vemoji is a chatting application that lets you send video emoji.  Chat like normal, but when you submit an emoticon, you'll have the chance to choose a part of your face to send instead. Smile, or quirk your eyebrows, stick out your tongue or roll your eyes. Alternate with your friend, and make composite faces! Ready to chat? Choose a username!");
+    var username = window.prompt("Welcome to Vemoji! Vemoji is a chatting application that lets you send video emoji.  Chat like normal, but when you submit an emoticon, you'll have the chance to choose a part of your face to send instead. Smile or quirk your eyebrows, stick out your tongue or roll your eyes. Alternate with your friend, and make composite faces! Ready to chat? Choose a username!");
     if(!username){
        var username = "anonymous"+Math.floor(Math.random()*1111);
     }
